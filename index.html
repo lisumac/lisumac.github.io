@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lisa Das Mohapatra | Android Developer</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: #e2e8f0;
+}
+
+/* NAV */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(10px);
+  background: rgba(15, 23, 42, 0.6);
+}
+
+nav a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+}
+
+.hero span {
+  color: #38bdf8;
+}
+
+.hero p {
+  margin-top: 10px;
+  color: #94a3b8;
+}
+
+.btn {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 12px 20px;
+  background: #38bdf8;
+  color: #020617;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* SECTION */
+section {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+}
+
+/* GLASS CARD */
+.card {
+  background: rgba(30, 41, 59, 0.6);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  margin-top: 20px;
+}
+
+/* SKILLS */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill {
+  background: #1e293b;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* PROJECTS */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.project {
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.project a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  background: #020617;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="#about">About</a>
+  <a href="#skills">Skills</a>
+  <a href="#projects">Projects</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<div class="hero">
+  <h1>Hi, I'm <span>Lisa</span></h1>
+  <p>Senior Android Developer | 7.5+ Years Experience</p>
+  <a class="btn" href="#projects">View Projects</a>
+</div>
+
+<section id="about">
+  <h2>About Me</h2>
+  <div class="card">
+    <p>
+      Android Developer with 7.5+ years of experience building scalable applications 
+      across Banking, Agriculture, E-Commerce, and Healthcare.
+      Expert in Kotlin, MVVM architecture, and performance optimization.
+    </p>
+  </div>
+</section>
+
+<section id="skills">
+  <h2>Skills</h2>
+  <div class="card skills">
+    <div class="skill">Kotlin</div>
+    <div class="skill">Core Java</div>
+    <div class="skill">Android SDK</div>
+    <div class="skill">Jetpack Compose</div>
+    <div class="skill">MVVM / MVP</div>
+    <div class="skill">REST APIs</div>
+    <div class="skill">Agile</div>
+
+    <!-- Connectivity / Hardware -->
+    <div class="skill">Bluetooth Low Energy (BLE)</div>
+    <div class="skill">Classic Bluetooth</div>
+    <div class="skill">USB Communication</div>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+
+  <div class="projects">
+
+    <div class="project">
+      <h3>Nitara Friend</h3>
+      <p>Milk data collection app using BLE & cloud integration.</p>
+      <a href="https://play.google.com/store/apps/details?id=com.nitara.serviceprovider" target="_blank">View App →</a>
+    </div>
+
+    <div class="project">
+      <h3>SBI InvesTap</h3>
+      <p>Secure banking app with login & dashboard.</p>
+      <a href="https://play.google.com/store/apps/details?id=com.sbi.mf" target="_blank">View App →</a>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <div class="card">
+    <p>Email: lisadasmohapatra12@gmail.com</p>
+    <p>GitHub: https://github.com/lisumac</p>
+    <p>LinkedIn: https://www.linkedin.com/in/lisa-das-mohapatra</p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Lisa Das Mohapatra</p>
+</footer>
+
+</body>
+</html>
