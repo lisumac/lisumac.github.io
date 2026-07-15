@@ -3,203 +3,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lisa Das Mohapatra | Android Developer</title>
-
+<title>Lisa Das Mohapatra — Senior Android Developer</title>
+<meta name="description" content="Lisa Das Mohapatra — Senior Android Developer specializing in BLE/Bluetooth hardware integration, Kotlin, and Clean Architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  :root{
+    --bg:#1e1e1e;
+    --panel:#252526;
+    --panel-2:#2d2d30;
+    --rule:#3c3c3c;
+    --text:#c9ccd0;
+    --text-dim:#7a7f87;
+    --text-faint:#5a5f66;
+    --verbose:#8a8f98;
+    --debug:#569cd6;
+    --info:#6a9955;
+    --info-bright:#89d185;
+    --warn:#d7ba7d;
+    --error:#f14c4c;
+    --tag:#4ec9b0;
+    --cursor:#89d185;
+    --mono-head: 'JetBrains Mono', monospace;
+    --mono-body: 'Fira Code', 'JetBrains Mono', monospace;
+  }
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #0f172a, #020617);
-  color: #e2e8f0;
-}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
 
-/* NAV */
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  padding: 20px;
-  position: sticky;
-  top: 0;
-  backdrop-filter: blur(10px);
-  background: rgba(15, 23, 42, 0.6);
-}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--mono-body);
+    font-size:14px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
 
-nav a {
-  color: #e2e8f0;
-  text-decoration: none;
-  font-weight: 600;
-}
+  a{color:var(--debug); text-decoration:none; border-bottom:1px dotted var(--debug);}
+  a:hover{color:var(--info-bright); border-bottom-color:var(--info-bright);}
 
-/* HERO */
-.hero {
-  text-align: center;
-  padding: 80px 20px;
-}
+  ::selection{background:var(--info); color:#0d0d0d;}
 
-.hero h1 {
-  font-size: 3rem;
-}
+  /* ---------- Terminal chrome ---------- */
+  .terminal{
+    max-width:920px;
+    margin:40px auto 100px;
+    background:var(--panel);
+    border-radius:8px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+    overflow:hidden;
+  }
+  .titlebar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 14px;
+    background:var(--panel-2);
+    border-bottom:1px solid var(--rule);
+  }
+  .dot{width:11px; height:11px; border-radius:50%; display:inline-block;}
+  .dot.red{background:#ff5f57;}
+  .dot.yellow{background:#febc2e;}
+  .dot.green{background:#28c840;}
+  .titlebar-label{
+    flex:1;
+    text-align:center;
+    color:var(--text-dim);
+    font-size:12px;
+    letter-spacing:0.02em;
+    margin-right:60px;
+  }
 
-.hero span {
-  color: #38bdf8;
-}
+  .tabs{
+    display:flex;
+    gap:2px;
+    padding:0 10px;
+    background:var(--panel-2);
+    border-bottom:1px solid var(--rule);
+    overflow-x:auto;
+  }
+  .tab{
+    background:none;
+    border:none;
+    color:var(--text-faint);
+    font-family:var(--mono-body);
+    font-size:12.5px;
+    padding:9px 14px 8px;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+  }
+  .tab:hover{color:var(--text);}
+  .tab.active{color:var(--info-bright); border-bottom-color:var(--info-bright);}
 
-.hero p {
-  margin-top: 10px;
-  color: #94a3b8;
-}
+  .screen{
+    padding:26px 28px 34px;
+  }
 
-.btn {
-  margin-top: 20px;
-  display: inline-block;
-  padding: 12px 20px;
-  background: #38bdf8;
-  color: #020617;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-}
+  /* ---------- boot sequence ---------- */
+  .boot-line{
+    color:var(--text-faint);
+    font-size:12.5px;
+    white-space:pre-wrap;
+    opacity:0;
+    animation:fadein 0.25s ease forwards;
+  }
+  @keyframes fadein{ to{opacity:1;} }
 
-/* SECTION */
-section {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-}
+  .boot-line .ok{color:var(--info-bright);}
 
-/* GLASS CARD */
-.card {
-  background: rgba(30, 41, 59, 0.6);
-  padding: 20px;
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-  margin-top: 20px;
-}
+  /* ---------- log line format ---------- */
+  .log{
+    display:grid;
+    grid-template-columns:126px 34px 22px auto;
+    gap:0 10px;
+    padding:2px 0;
+    align-items:baseline;
+  }
+  .log .ts{color:var(--text-faint); font-size:12px;}
+  .log .pid{color:var(--text-faint); font-size:12px;}
+  .log .lvl{font-weight:700; font-size:12px;}
+  .log .lvl.I{color:var(--info-bright);}
+  .log .lvl.D{color:var(--debug);}
+  .log .lvl.W{color:var(--warn);}
+  .log .lvl.E{color:var(--error);}
+  .log .lvl.V{color:var(--verbose);}
+  .log .body{color:var(--text);}
+  .log .tagname{color:var(--tag); font-weight:600;}
 
-/* SKILLS */
-.skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+  @media (max-width:640px){
+    .log{grid-template-columns:1fr; gap:0;}
+    .log .ts, .log .pid{display:none;}
+    .log .lvl{display:inline;}
+  }
 
-.skill {
-  background: #1e293b;
-  padding: 10px 15px;
-  border-radius: 20px;
-  font-size: 14px;
-}
+  section{padding-top:8px; margin-bottom:6px;}
+  section + section{
+    margin-top:28px;
+    padding-top:22px;
+    border-top:1px dashed var(--rule);
+  }
 
-/* PROJECTS */
-.projects {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
+  .cmd-line{
+    color:var(--text-dim);
+    font-size:13px;
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .cmd-line .prompt{color:var(--info-bright);}
+  .cmd-line .path{color:var(--tag);}
+  .cmd-line .arg{color:var(--text);}
 
-.project {
-  padding: 20px;
-  border-radius: 15px;
-  background: rgba(30, 41, 59, 0.6);
-}
+  h1{
+    font-family:var(--mono-head);
+    font-weight:800;
+    font-size:clamp(24px, 5vw, 34px);
+    color:#fff;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+  }
+  h1 .cursor{
+    display:inline-block;
+    width:10px; height:0.85em;
+    background:var(--cursor);
+    margin-left:4px;
+    animation:blink 1.1s step-end infinite;
+    vertical-align:-2px;
+  }
+  @keyframes blink{ 50%{opacity:0;} }
 
-.project a {
-  color: #38bdf8;
-  text-decoration: none;
-}
+  .role{
+    color:var(--warn);
+    font-size:15px;
+    font-weight:500;
+  }
+  .role .sep{color:var(--text-faint); margin:0 8px;}
 
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-  background: #020617;
-}
+  .pitch{
+    color:var(--text);
+    margin-top:16px;
+    max-width:640px;
+    font-size:13.5px;
+    line-height:1.8;
+  }
+  .pitch .kw{color:var(--debug);}
+  .pitch .str{color:var(--info-bright);}
+
+  .meta-row{
+    margin-top:18px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 18px;
+    font-size:12.5px;
+    color:var(--text-dim);
+  }
+  .meta-row a{border-bottom:none;}
+  .meta-row span.k{color:var(--text-faint);}
+
+  h2.section-title{
+    font-family:var(--mono-head);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--text-faint);
+    margin:0 0 16px;
+    font-weight:700;
+  }
+  h2.section-title .n{color:var(--tag);}
+
+  .job{
+    margin-bottom:22px;
+    padding-left:16px;
+    border-left:2px solid var(--rule);
+  }
+  .job.current{border-left-color:var(--info-bright);}
+  .job-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:8px 12px;
+    margin-bottom:4px;
+  }
+  .job-role{color:#fff; font-weight:700; font-size:14.5px;}
+  .job-org{color:var(--tag);}
+  .job-dates{color:var(--text-faint); font-size:12px; margin-left:auto;}
+  .job-domain{color:var(--text-faint); font-size:12px; font-style:italic;}
+  .job-desc{color:var(--text); font-size:13px; margin:6px 0 0; max-width:680px;}
+  .job-desc .hl{color:var(--warn);}
+
+  .badge-current{
+    font-size:10.5px;
+    color:#0d0d0d;
+    background:var(--info-bright);
+    padding:1px 7px;
+    border-radius:3px;
+    font-weight:700;
+    letter-spacing:0.04em;
+  }
+
+  .skills-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
+    gap:18px 24px;
+  }
+  .skill-cat-label{color:var(--debug); font-size:11.5px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;}
+  .skill-list{display:flex; flex-wrap:wrap; gap:6px;}
+  .skill-pill{
+    font-size:12px;
+    color:var(--text);
+    background:var(--panel-2);
+    border:1px solid var(--rule);
+    padding:3px 9px;
+    border-radius:4px;
+  }
+
+  .flagship{
+    background:var(--panel-2);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--warn);
+    border-radius:4px;
+    padding:16px 18px;
+    margin-top:4px;
+  }
+  .flagship-title{color:#fff; font-weight:700; font-size:14.5px; margin-bottom:6px;}
+  .flagship-title .path{color:var(--tag); font-weight:400; font-size:12.5px; margin-left:8px;}
+  .flagship p{margin:8px 0 0; font-size:13px; color:var(--text);}
+  .flagship .hl{color:var(--warn);}
+  .flagship ul{margin:10px 0 0; padding-left:18px; font-size:12.5px; color:var(--text-dim);}
+  .flagship li{margin-bottom:4px;}
+  .flagship li::marker{color:var(--tag);}
+
+  footer{
+    padding:20px 28px 26px;
+    border-top:1px solid var(--rule);
+    color:var(--text-faint);
+    font-size:12px;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  .status-open{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:var(--info-bright);
+  }
+  .status-open .pulse{
+    width:7px; height:7px; border-radius:50%;
+    background:var(--info-bright);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1; box-shadow:0 0 0 0 rgba(137,209,133,0.5);}
+    50%{opacity:0.5; box-shadow:0 0 0 5px rgba(137,209,133,0);}
+  }
+
+  .hidden{display:none;}
 </style>
 </head>
-
 <body>
 
-<nav>
-  <a href="#about">About</a>
-  <a href="#skills">Skills</a>
-  <a href="#projects">Projects</a>
-  <a href="#contact">Contact</a>
-</nav>
+<div class="terminal">
+  <div class="titlebar">
+    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+    <span class="titlebar-label">lisu@android-dev — adb logcat -s Resume</span>
+  </div>
 
-<div class="hero">
-  <h1>Hi, I'm <span>Lisa</span></h1>
-  <p>Senior Android Developer | 7.5+ Years Experience</p>
-  <a class="btn" href="#projects">View Projects</a>
+  <nav class="tabs" aria-label="Sections">
+    <button class="tab active" data-target="top">$ whoami</button>
+    <button class="tab" data-target="experience">$ cat experience.log</button>
+    <button class="tab" data-target="flagship">$ cat libconnector.md</button>
+    <button class="tab" data-target="skills">$ less skills.txt</button>
+    <button class="tab" data-target="contact">$ open contact.sh</button>
+  </nav>
+
+  <div class="screen">
+
+    <div id="boot"></div>
+
+    <div id="content" class="hidden">
+
+      <section id="top">
+        <h1>Lisa Das Mohapatra<span class="cursor" aria-hidden="true"></span></h1>
+        <div class="role">Senior Android Developer<span class="sep">/</span>BLE &amp; Hardware Integration Specialist</div>
+
+        <p class="pitch">
+          <span class="kw">7+ years</span> building production Android software, with a specialization most
+          teams don't have in-house: <span class="str">BLE, Bluetooth Classic, and USB hardware communication</span>.
+          Comfortable owning a codebase end-to-end — from architecture to the last edge case in a
+          reconnect-retry loop.
+        </p>
+
+        <div class="meta-row">
+          <span><span class="k">loc:</span> Bengaluru, India</span>
+          <span><span class="k">stack:</span> Kotlin · MVVM · Clean Architecture · Jetpack Compose · Coroutines</span>
+          <span class="status-open"><span class="pulse"></span> open to opportunities</span>
+        </div>
+      </section>
+
+      <section id="experience">
+        <h2 class="section-title">// <span class="n">04</span> entries — experience.log</h2>
+
+        <div class="job current">
+          <div class="job-head">
+            <span class="job-role">Sole Kotlin/Android Developer</span>
+            <span class="job-org">@ GormalOne LLP</span>
+            <span class="badge-current">FLAGSHIP ROLE</span>
+            <span class="job-dates">Apr 2023 — Apr 2026</span>
+          </div>
+          <div class="job-desc">
+            Sole Android developer on the team. Architected <span class="hl">libconnector (Nitara Connector)</span>,
+            a production AAR library handling BLE / Bluetooth Classic / USB hardware communication,
+            distributed across the entire Nitara product suite. See <code>libconnector.md</code> for detail.
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <span class="job-role">Android Developer</span>
+            <span class="job-org">@ Neosoft Technologies</span>
+            <span class="job-dates">Jul 2021 — Mar 2023</span>
+          </div>
+          <div class="job-desc">Fintech domain projects.</div>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <span class="job-role">Android Developer</span>
+            <span class="job-org">@ Pyramidion Solutions</span>
+            <span class="job-dates">May 2020 — Jun 2021</span>
+          </div>
+          <div class="job-desc">Agritech and food delivery domain projects.</div>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <span class="job-role">Android Developer</span>
+            <span class="job-org">@ Malus Technologies</span>
+            <span class="job-dates">Mar 2018 — Apr 2020</span>
+          </div>
+          <div class="job-desc">Hospitality domain projects.</div>
+        </div>
+      </section>
+
+      <section id="flagship">
+        <h2 class="section-title">// <span class="n">01</span> file — libconnector.md</h2>
+
+        <div class="flagship">
+          <div class="flagship-title">libconnector <span class="path">/ Nitara Connector — production AAR library</span></div>
+          <p>
+            Sole architect and developer. A hardware-communication library distributed as an
+            <span class="hl">AAR</span> across the full Nitara product suite — not a one-off feature,
+            a shared dependency other product teams build on top of.
+          </p>
+          <ul>
+            <li>BLE, Bluetooth Classic, and USB device communication in one unified layer</li>
+            <li>Built for reuse: one library, multiple products, multiple hardware variants</li>
+            <li>MVVM / Clean Architecture — connection state, reconnection, and device abstraction kept isolated from consuming apps</li>
+            <li>Maintained solo — no dedicated Android peer to pair or split ownership with</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="skills">
+        <h2 class="section-title">// skills.txt</h2>
+
+        <div class="skills-grid">
+          <div>
+            <div class="skill-cat-label">Language &amp; core</div>
+            <div class="skill-list">
+              <span class="skill-pill">Kotlin</span>
+              <span class="skill-pill">Coroutines</span>
+              <span class="skill-pill">Flow</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-cat-label">Architecture</div>
+            <div class="skill-list">
+              <span class="skill-pill">MVVM</span>
+              <span class="skill-pill">Clean Architecture</span>
+              <span class="skill-pill">Hilt</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-cat-label">Hardware / BLE</div>
+            <div class="skill-list">
+              <span class="skill-pill">BLE</span>
+              <span class="skill-pill">Bluetooth Classic</span>
+              <span class="skill-pill">USB comms</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-cat-label">Jetpack</div>
+            <div class="skill-list">
+              <span class="skill-pill">Jetpack Compose</span>
+              <span class="skill-pill">WorkManager</span>
+              <span class="skill-pill">Services</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2 class="section-title">// contact.sh</h2>
+        <div class="log">
+          <span class="ts">$</span><span class="pid"></span><span class="lvl I">I</span>
+          <span class="body"><span class="tagname">email:</span> <a href="mailto:you@example.com">you@example.com</a> <span style="color:var(--text-faint);">— replace with your address</span></span>
+        </div>
+        <div class="log">
+          <span class="ts">$</span><span class="pid"></span><span class="lvl I">I</span>
+          <span class="body"><span class="tagname">linkedin:</span> <a href="#" target="_blank" rel="noopener">linkedin.com/in/your-handle</a> <span style="color:var(--text-faint);">— replace with your URL</span></span>
+        </div>
+        <div class="log">
+          <span class="ts">$</span><span class="pid"></span><span class="lvl I">I</span>
+          <span class="body"><span class="tagname">github:</span> <a href="https://github.com/lisumac" target="_blank" rel="noopener">github.com/lisumac</a></span>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>lisumac.github.io</span>
+    <span>build: android · kotlin · ble</span>
+  </footer>
 </div>
 
-<section id="about">
-  <h2>About Me</h2>
-  <div class="card">
-    <p>
-      Android Developer with 7.5+ years of experience building scalable applications 
-      across Banking, Agriculture, E-Commerce, and Healthcare.
-      Expert in Kotlin, MVVM architecture, and performance optimization.
-    </p>
-  </div>
-</section>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bootEl = document.getElementById('boot');
+  var contentEl = document.getElementById('content');
 
-<section id="skills">
-  <h2>Skills</h2>
-  <div class="card skills">
-    <div class="skill">Kotlin</div>
-    <div class="skill">Core Java</div>
-    <div class="skill">Android SDK</div>
-    <div class="skill">Jetpack Compose</div>
-    <div class="skill">MVVM / MVP</div>
-    <div class="skill">REST APIs</div>
-    <div class="skill">Agile</div>
+  var bootLines = [
+    '$ adb shell whoami',
+    'lisu',
+    '$ adb shell getprop ro.product.model',
+    'SeniorAndroidDeveloper',
+    '$ ./load_profile.sh',
+    'Loading profile' + '.'.repeat(3) + ' <span class="ok">OK</span>'
+  ];
 
-    <!-- Connectivity / Hardware -->
-    <div class="skill">Bluetooth Low Energy (BLE)</div>
-    <div class="skill">Classic Bluetooth</div>
-    <div class="skill">USB Communication</div>
-  </div>
-</section>
+  function showBoot(){
+    if(reduce){ finish(); return; }
+    var i = 0;
+    function next(){
+      if(i >= bootLines.length){ setTimeout(finish, 220); return; }
+      var line = document.createElement('div');
+      line.className = 'boot-line';
+      line.innerHTML = bootLines[i];
+      bootEl.appendChild(line);
+      i++;
+      setTimeout(next, 190);
+    }
+    next();
+  }
 
-<section id="projects">
-  <h2>Projects</h2>
+  function finish(){
+    bootEl.style.transition = 'opacity 0.25s ease';
+    bootEl.style.opacity = '0';
+    setTimeout(function(){
+      bootEl.classList.add('hidden');
+      contentEl.classList.remove('hidden');
+    }, reduce ? 0 : 250);
+  }
 
-  <div class="projects">
+  showBoot();
 
-    <div class="project">
-      <h3>Nitara Friend</h3>
-      <p>Milk data collection app using BLE & cloud integration.</p>
-      <a href="https://play.google.com/store/apps/details?id=com.nitara.serviceprovider" target="_blank">View App →</a>
-    </div>
-
-    <div class="project">
-      <h3>SBI InvesTap</h3>
-      <p>Secure banking app with login & dashboard.</p>
-      <a href="https://play.google.com/store/apps/details?id=com.sbi.mf" target="_blank">View App →</a>
-    </div>
-
-  </div>
-</section>
-
-<section id="contact">
-  <h2>Contact</h2>
-  <div class="card">
-    <p>Email: lisadasmohapatra12@gmail.com</p>
-    <p>GitHub: https://github.com/lisumac</p>
-    <p>LinkedIn: https://www.linkedin.com/in/lisa-das-mohapatra</p>
-  </div>
-</section>
-
-<footer>
-  <p>© 2026 Lisa Das Mohapatra</p>
-</footer>
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); });
+      tab.classList.add('active');
+      var target = document.getElementById(tab.getAttribute('data-target'));
+      if(target){ target.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'start'}); }
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
