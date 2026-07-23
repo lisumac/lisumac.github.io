@@ -194,6 +194,8 @@
   .btn:hover{ background:var(--ink); color:var(--panel); transform:translateY(-1px); }
   .btn.primary{ background:var(--signal); border-color:var(--signal); color:#fff; }
   .btn.primary:hover{ background:#0c8265; border-color:#0c8265; }
+  .btn.copy{ cursor:pointer; }
+  .btn.copy.copied{ background:var(--signal); border-color:var(--signal); color:#fff; }
 
   /* ---------------- HEADINGS ---------------- */
   h2.stitle{
@@ -322,10 +324,11 @@
       <div class="tb-role">Senior Android Developer — BLE &amp; Hardware Integration Specialist</div>
 
       <div class="tb-links">
-        <a class="btn primary" href="resume.pdf" target="_blank" rel="noopener">↓ Download Resume</a>
+        <a class="btn primary" href="resume.pdf" target="https://github.com/lisumac/lisumac.github.io/blob/main/lisa_android_dev_resume%20(1).pdf" rel="noopener">↓ Download Resume</a>
         <a class="btn" href="https://play.google.com/store/apps/details?id=com.nitara.serviceprovider&hl=en_IN" target="_blank" rel="noopener">▷ View on Play Store</a>
         <a class="btn" href="https://github.com/lisumac" target="_blank" rel="noopener">github.com/lisumac</a>
-        <a class="btn" href="mailto:lisadasmohapatra@outlook.com">email</a>
+        <a class="btn" href="mailto:lisadasmohapatra@outlook.com">✉ email app</a>
+        <button type="button" class="btn copy" data-copy-email onclick="copyEmail(this)">⧉ copy email</button>
       </div>
 
       <div class="tb-fields">
@@ -573,6 +576,7 @@
       <div>
         <span class="k">Email</span>
         <a href="mailto:lisadasmohapatra@outlook.com">lisadasmohapatra@outlook.com</a>
+        <button type="button" class="btn copy" style="margin-top:8px; padding:5px 10px; font-size:10.5px;" data-copy-email onclick="copyEmail(this)">⧉ copy</button>
       </div>
       <div>
         <span class="k">LinkedIn</span>
@@ -591,6 +595,38 @@
   </footer>
 
 </div>
+
+<script>
+function copyEmail(btn){
+  var email = 'lisadasmohapatra@outlook.com';
+  var original = btn.innerHTML;
+  function showCopied(){
+    btn.innerHTML = '✓ copied';
+    btn.classList.add('copied');
+    setTimeout(function(){
+      btn.innerHTML = original;
+      btn.classList.remove('copied');
+    }, 1800);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(email).then(showCopied).catch(function(){
+      fallbackCopy(email); showCopied();
+    });
+  } else {
+    fallbackCopy(email); showCopied();
+  }
+}
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+}
+</script>
 
 </body>
 </html>
